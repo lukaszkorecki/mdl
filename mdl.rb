@@ -16,7 +16,7 @@ def cleanup! dir_name
   chapters.each do |chapter|
     dir = "#{dir_name}/#{chapter}"
     mkdir  dir unless File.exists?  dir
-    files.select { |file| file =~ /#{chapter}/ }.each do |_file|
+    files.select { |file| file =~ /#{chapter}_/ }.each do |_file|
       file = _file.split('/').last
       mv _file, "#{dir_name}/#{chapter}/#{file}"
     end
