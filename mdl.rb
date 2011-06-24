@@ -28,8 +28,8 @@ def getit! dir_name, target_url
       getit! dir_name, next_url
     end
   rescue => e
-    puts "Failed at #{target_url}"
-    puts e.inspect
+    puts "Failed at #{target_url} - probably we reached the end!"
+    puts e.inspect unless ENV['DEBUG'].nil?
     exit 1
   end
 end
