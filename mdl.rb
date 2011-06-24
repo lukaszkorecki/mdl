@@ -2,9 +2,28 @@
 
 require 'rubygems'
 require 'mechanize'
+require 'fileutils'
 
 BROWSER = Mechanize.new { |agent|  agent.user_agent_alias = "Mac Safari"}
 
+def cleanup! dir_name
+  include FileUtils
+  files = Dir["#{dir_name}/*.jpg"]
+  chapters = files.map { |f| f.split('/').last.split('Page').first.split('-').first.sub(/_$/,'') }.uniq
+
+  puts "Moving pages into chapters\n #{chapters.join("\n\t")}"
+
+  chapters.each do |chapter|
+    dir = "#{dir_name}/#{chapter}"
+    mkdir  dir unless File.exists?  dir
+    files.select { |file| file =~ /#{chapter}/ }.each do |_file|
+      file = _file.split('/').last
+      mv _file, "#{dir_name}/#{chapter}/#{file}"
+    end
+
+  end
+
+end
 def getit! dir_name, target_url
   puts ">>>> #{target_url}"
 
@@ -30,6 +49,8 @@ def getit! dir_name, target_url
   rescue => e
     puts "Failed at #{target_url} - probably we reached the end!"
     puts e.inspect unless ENV['DEBUG'].nil?
+    puts 'cleaning up'
+    cleanup! dir_name
     exit 1
   end
 end
