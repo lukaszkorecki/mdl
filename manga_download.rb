@@ -19,14 +19,18 @@ def getit! dir_name, target_url
 
       name = (page.title.gsub(/[\ \/:]/, '_')+"."+url.split('.').last).gsub /[:\/]/,''
 
-      puts ">>>> Downloading #{name} (#{url})"
+      name = name =~ /Page\_\d\.jpg/ ?  name.sub('Page_', 'Page_0') : name
 
-      puts `curl #{url} > #{dir_name}/#{name}`
-      puts "="*16
+      puts ">>>> Downloading #{name} ( #{url} )"
+
+      pid = fork { `curl -s #{url} > #{dir_name}/#{name}` }
+      Process.detach pid
+
       getit! dir_name, next_url
     end
-  rescue
+  rescue => e
     puts "Failed at #{target_url}"
+    puts e.inspect
     exit 1
   end
 end
