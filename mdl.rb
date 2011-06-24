@@ -55,5 +55,9 @@ def getit! dir_name, target_url
   end
 end
 
-puts "usage: \nruby manga_download.rb <DIR> '<STARTURL>'" and exit  1 if ARGV.length < 2
-getit! ARGV[0], ARGV[1]
+if ENV['CLEANUP'].nil?
+  puts "usage: \nruby manga_download.rb <DIR> '<STARTURL>'" and exit  1 if ARGV.length < 2
+  getit! ARGV[0], ARGV[1]
+else
+  cleanup! ARGV[0]
+end
