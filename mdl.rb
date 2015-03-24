@@ -40,9 +40,8 @@ def getit! dir_name, target_url
       name = name =~ /Page\_\d\.jpg/ ?  name.sub('Page_', 'Page_0') : name
 
       puts ">>>> Downloading #{name} ( #{url} )"
-
-      pid = fork { `curl -s #{url} > #{dir_name}/#{name}` }
-      Process.detach pid
+      
+      BROWSER.get(url).save "#{dir_name}/#{name}"
 
       getit! dir_name, next_url
     end
